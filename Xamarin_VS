@@ -2,16 +2,20 @@
 ## Curso Alura
 ### Xamarin no visual studio
 
-#POSICIONANDO CONTROLES NA TELA
+#POSICIONANDO CONTROLES NA TELA#
 
-*Stacklayout:*
+*****Stacklayout:*****
   empilha componentes na tela
 Ex:
   <StackLayout> 
     <label Text="Texto1"/>
   </StackLayout>
+  
+  
+-------------------------------------------------------------------------------------------------------------------------
 
-*Grid:* 
+
+*****Grid:*****
   Permite posicionar itens na tela em linhas e colunas
 	VerticalOptions = default Fill (preenche todo o espaço da tela)
 		-Alterado para Start ( utiliza do topo para baixo apenas o espaço necessário)
@@ -34,14 +38,18 @@ Ex:
 	<label Grid.Row="1"   Grid.Column="1"  Text="Texto4"/>
 </Grid>
 
-*ListView:*
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+*****ListView:*****
   O diferentão, não se controla muita coisa pelo XAML. 
 	Com o nome definido no xaml é possível acessar este controle no código da tela (c#)
   
 <ListView x:Name="ListViewTeste">
 
 </ListView>
-
+______________________________________
 C#
 Public MainPage()
 {
@@ -55,7 +63,11 @@ Public MainPage()
 
 }
 
-*ListView com Binding*
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+*****ListView com Binding*****
 O binding pode ser feito apontando o ItemSource no codebehind ou na prórpia view, não alterado o template do listview
 Ex:
 	<ListView x:Name="ListViewTeste">
@@ -72,7 +84,7 @@ Ex:
 
 
 c#
-
+_____________________________________
 //criar a classe do objeto
 Public class Teste
 {
@@ -95,7 +107,7 @@ This.ListTeste =  new List<Teste>
 
 ListViewTeste.ItemSource = this.ListTeste;
 
-
+_____________________________________________
 Ex2:
 Biding do item source no xaml
 <ListView x:Name="ListViewTeste" ItemSource="{Biding Testes}">
@@ -109,7 +121,7 @@ Biding do item source no xaml
 		</DataTemplate>
 	</ListView.ItemTemplate>
 </ListView>
-
+_______________________________________________
 c#
 
 	//criar a classe do objeto
