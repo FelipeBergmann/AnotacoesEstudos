@@ -149,3 +149,75 @@ c#
 	//é configurado o biding context
 	This.BidingContext =  this;
 
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Para quebrar um label em vários pedaços para formatar string , é necessário utilizar spans
+**O componente span não tem suporte ao Binder**
+
+<ListView x:Name="ListViewTeste" ItemSource="{Biding Testes}">
+	<ListView.ItemTemplate>
+		<DataTemplate>
+			<ViewCell>
+				<ViewCell.View>
+					<Label>
+						<Label.FormattedText>
+							<FormattedString>
+								<FormattedString.Spans>
+									<Span Text="Texto1" FontSize="20"> </Span>
+									<Span Text=" - "></Span>
+									<Span Text="ID: 1" FontAttributes="Bold"></Span>
+								</FormattedString.Spans>
+							</FormattedString>
+						</Label.FormattedText>
+					</Label>
+				</ViewCell.View>
+			</ViewCell>
+		</DataTemplate>
+	</ListView.ItemTemplate>
+</ListView>
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+*****StackLayout Horizontal*****
+
+<ListView x:Name="ListViewTeste" ItemSource="{Biding Testes}">
+	<ListView.ItemTemplate>
+		<DataTemplate>
+			<ViewCell>
+				<ViewCell.View>
+					<StackLayout Orientation="Horizontal">
+						<Label Text="Texto1" FontSize="20" VerticalTextAligment="Center"> </Label >
+						<Label Text=" - "  VerticalTextAligment="Center"></Label >
+						<Label Text="ID: 1" FontAttributes="Bold"  VerticalTextAligment="Center"></Label >
+					</StackLayout>
+				</ViewCell.View>
+			</ViewCell>
+		</DataTemplate>
+	</ListView.ItemTemplate>
+</ListView>
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+****Margem****
+ - Adicionada ao listView ListViewTeste
+<ListView x:Name="ListViewTeste" ItemSource="{Biding Testes}" Margin="25">
+	<ListView.ItemTemplate>
+		<DataTemplate>
+			<ViewCell>
+				<ViewCell.View>
+					<StackLayout Orientation="Horizontal">
+						<Label Text="Texto1" FontSize="20" VerticalTextAligment="Center"> </Label >
+						<Label Text=" - "  VerticalTextAligment="Center"></Label >
+						<Label Text="ID: 1" FontAttributes="Bold"  VerticalTextAligment="Center"></Label >
+					</StackLayout>
+				</ViewCell.View>
+			</ViewCell>
+		</DataTemplate>
+	</ListView.ItemTemplate>
+</ListView>
