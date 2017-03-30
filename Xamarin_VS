@@ -54,3 +54,86 @@ Public MainPage()
 	};
 
 }
+
+*ListView com Binding*
+O binding pode ser feito apontando o ItemSource no codebehind ou na prórpia view, não alterado o template do listview
+Ex:
+	<ListView x:Name="ListViewTeste">
+		<ListView.ItemTemplate>
+			<DataTemplate>
+				<ViewCell>
+					<ViewCell.View>
+						<Label Text="{Biding Nome}"></Label>
+					</ViewCell.View>
+				</ViewCell>
+			</DataTemplate>
+		</ListView.ItemTemplate>
+	</ListView>
+
+
+c#
+
+//criar a classe do objeto
+Public class Teste
+{
+	Public string Nome {get;set;}
+	Public int Id {get;set;}
+
+}
+
+//main
+
+Public List<Teste> ListTeste {get;set;}
+
+//construtor main
+This.ListTeste =  new List<Teste>
+{
+	New Teste{Nome = "Texto1", Id = 1},
+	New Teste{Nome = "Texto2", Id = 2}
+
+}
+
+ListViewTeste.ItemSource = this.ListTeste;
+
+
+Ex2:
+Biding do item source no xaml
+<ListView x:Name="ListViewTeste" ItemSource="{Biding Testes}">
+	<ListView.ItemTemplate>
+		<DataTemplate>
+			<ViewCell>
+				<ViewCell.View>
+					<Label Text="{Biding Nome}"></Label>
+				</ViewCell.View>
+			</ViewCell>
+		</DataTemplate>
+	</ListView.ItemTemplate>
+</ListView>
+
+c#
+
+	//criar a classe do objeto
+	Public class Teste
+	{
+		Public string Nome {get;set;}
+		Public int Id {get;set;}
+
+	}
+
+	//main
+
+	Public List<Teste> ListTeste {get;set;}
+
+	//construtor main
+	This.ListTeste =  new List<Teste>
+	{
+		New Teste{Nome = "Texto1", Id = 1},
+		New Teste{Nome = "Texto2", Id = 2}
+
+	}
+
+	//a configuração do item source é removida
+	//ListViewTeste.ItemSource = this.ListTeste;
+	//é configurado o biding context
+	This.BidingContext =  this;
+
