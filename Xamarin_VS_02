@@ -1,0 +1,20 @@
+#Xamarin
+##Curso Alura
+
+*****ItemTapped****
+
+<ListView x:Name="ListViewTeste" ItemSource="{Biding Testes}" Margin="25" ItemTapped="ListViewTeste_ItemTapped">
+
+C#
+
+ListViewTeste_ItemTapped(object sender, ItemTappedEventArgs e)
+{
+	Dim item = (Teste)e.Item;
+	
+	DisplayAlert(string.format("Nome: {0} - ID: {1}", item.Nome, item.Id), "OK");
+
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
