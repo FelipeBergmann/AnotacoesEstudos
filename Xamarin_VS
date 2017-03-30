@@ -1,0 +1,56 @@
+# Xamarin
+## Curso Alura
+### Xamarin no visual studio
+
+#POSICIONANDO CONTROLES NA TELA
+
+*Stacklayout:*
+  empilha componentes na tela
+Ex:
+  <StackLayout> 
+    <label Text="Texto1"/>
+  </StackLayout>
+
+*Grid:* 
+  Permite posicionar itens na tela em linhas e colunas
+	VerticalOptions = default Fill (preenche todo o espaço da tela)
+		-Alterado para Start ( utiliza do topo para baixo apenas o espaço necessário)
+	Necessário definir em seções especiais o número de colunas e linhas
+  Necessário definir na tag do controle qual linha e coluna ele deverá ser adicionado
+  
+<Grid VerticalOptions="Start">
+	<Grid.ColumnDefinitions>
+		<ColumnDefinition></ColumnDefinition>
+		<ColumnDefinition></ColumnDefinition>
+	</Grid.ColumnDefinitions>
+	
+	<Grid.RowDefinition>
+		<RowDefinition></RowDefinition>
+		<RowDefinition></RowDefinition>
+	</Grid.RowDefinition>
+	<label Grid.Row="0"   Grid.Column="0" Text="Texto1"/>
+	<labe  Grid.Row="0"   Grid.Column="1" l Text="Texto2"/>
+	<label Grid.Row="1"    Grid.Column="0"  Text="Texto3"/>
+	<label Grid.Row="1"   Grid.Column="1"  Text="Texto4"/>
+</Grid>
+
+*ListView:*
+  O diferentão, não se controla muita coisa pelo XAML. 
+	Com o nome definido no xaml é possível acessar este controle no código da tela (c#)
+  
+<ListView x:Name="ListViewTeste">
+
+</ListView>
+
+C#
+Public MainPage()
+{
+	InitializeComponent();
+	
+	ListViewTeste.ItemSource = new string[]
+	{
+		"Texto 1",
+		"Texto 2"
+	};
+
+}
