@@ -9,7 +9,7 @@ C#
 
 ListViewTeste_ItemTapped(object sender, ItemTappedEventArgs e)
 {
-	Dim item = (Teste)e.Item;
+	Teste item = (Teste)e.Item;
 	
 	DisplayAlert(string.format("Nome: {0} - ID: {1}", item.Nome, item.Id), "OK");
 
