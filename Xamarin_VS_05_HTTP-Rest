@@ -1,0 +1,84 @@
+Acessando serviçoes HTTP Rest
+O xamarin não tem uma maneira simplificada para realizar requisições http, para isto, a microsoft tem um package para auxiliar, baixar via nuget:
+Microsoft.Net.Http. Adicionar a referencia ao projeto Portable.
+
+declarar o HttpClient e realizar a requisição, para isto, podemos utilizar o método GetStringAssync(url), porém, este método retorna uma Task<string>. Portanto, é necessário utitlizar um await para aguardar os dados serem retornados. Para utilizar o await o método precisa ter em sua assinatura async e retornar uma task, assim sendo:
+
+public async Task GetLista()
+{
+	HttpClient cliente = new HttpClient();
+	var resultado = await cliente.GetStringAssync(URL);
+}
+
+Podemos utilizar uma biblioteca para transformar o resultado string em Json.
+Nuget: Newtonsoft.Json (Adicionar ao portable)
+Como o resultado é uma string serializada é necessário utilizar um deserialize, para realizar a tarefa, este objeto converte o resultado json em um objeto T que deve conter os atributos com o mesmo nome e tipo para que sejam preenchidos. Resumo: JsonConvert.DeserializeObject<T>
+public class Teste
+{
+	public string Nome {get;set;}
+	public int Valor {get;set;}
+
+}
+
+public async Task GetLista()
+{
+	HttpClient cliente = new HttpClient();
+	var resultado = await cliente.GetStringAssync(URL);
+	
+	JsonConvert.DeserializeObject<Teste[]>(resultado); // T = array of Teste
+}
+
+ObservableCollection
+
+O problema do binder que utitlizamos antes é que ele se baseia num List. Quando configuramos o BinderContext apontando para este list, os itens que existem neste list serão adicionados a listagem, mas se for adicionado algo depois, não será.
+Para resolver este problema, precisamos utilizar um ObservableCollection. No construtor, então alteramos:
+public Teste()
+{
+	this.ListaTeste = new ObservableCollection<Teste>();
+}
+
+---
+UX
+Quando fazemos um request, isto pode demorar, dependendo do servidor e da conexão do usuário, por isto, o usuário pode achar que o app está travado, para evitar esta má impressão, podemos utitlizar um ActivityIndicator que irá indicar ao usuário que o app está rodando.
+Adicionar antes do listview no XAML
+<ActivityIndicator IsRunning="True"></ActivityIndicator>
+(O AI e o LV podem ficar dentro de um stacklayout)
+Para controlar este icone de "aguarde, estamos trabalhando", vamos criar uma property no ViewModel
+private bool aguarde;
+public bool Aguarde
+{
+	get {return aguarde;}
+	set
+	{
+		aguarde = value;
+		OnPropertyChanged(); // para reaproveitar o código que atende o OnPropertyChanged podemos criar uma base de ViewModel
+	
+	}
+	
+	
+}
+
+A nossa classe de ViewModel deve herdar BaseViewModel
+//exemplo reaproveitamento viewmodel
+public abstract class BaseViewModel
+{
+
+	public event PropertyChangedEventHandler PropertyChanged;
+
+	public void OnPropertyChanged([CallerMemberName]string name = "")
+	//Esta anotação CallerMemberName passa o próprio chamador do evento caso o argumento seja nulo
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		//a interrogação após o objeto valida se o objeto PropertyChanged é null antes de realizar o Invoke. Caso seja, não executa.
+		
+	}
+
+}
+
+Voltando o ActivityIndicator
+<ActivityIndicator IsRunning="{Binding Aguarde}" IsVisible="{Binding Aguarde}" ></ActivityIndicator>
+
+Não esquecer de configurar a var Aguarde como true antes de realizar o Request para o Json e voltá-la para false quando terminar.
+
+--
+
