@@ -1,0 +1,90 @@
+Navigation
+
+Navigation.PushAsync(new DetalherView());
+Alterar no app.xml.cs para que o mainpage seja inicializado encapsulado pelo NavigationPage
+
+No xaml de cada página, inserir a property Title no ContentPage para mostrar o título da tela no header 
+Ou no construtor da página, configurar this.title ="titulo"
+
+Evento button: Clicked
+
+Container p/ configurações TABLEVIEW
+
+Ex:
+
+TableView
+
+<TableView>
+    <TableRoot>
+        <TableSection Title="Dados Pessoais">
+        </TableSection>
+        <TableSection Title="Formação Acadêmica">
+        </TableSection>
+        <TableSection Title="Experiência Profissional">
+        </TableSection>
+        <TableSection Title="Atividades Complementares">
+        </TableSection>
+    </TableRoot>
+</TableView>
+
+
+informar no table view qual a intenção dele pela prop intent
+table view tem controles proprios, que terminam com "cell"
+SwitchCell "on-off" - On= define se o objeto começa "ligado" ou não
+TextCell = Para exibir texto dentro do table view
+<StackLayout Padding="25">
+	
+	<TableView intent="Settings">
+		<TableRoot>
+			<TableSection Title="Acessórios">
+				<SwitchCell text="Option1" On="true"></SwitchCell>
+				
+				<TextCell Text="Esta é uma label de table view"></TextCell>
+			</TableSection>
+			
+		
+		</TableRoot>		
+		
+	</TableView>
+
+
+</StackLayout>
+
+Mais Sobre Binding
+Uma técnica: Criar uma property que retorna o texto já formatado para o binding
+ex:
+public string Opcao1
+{
+	get { return "O valor total da sua compra é R$ " + dcm_valor_total_compra.toString(); }
+}
+
+<TextCell Text="{Binding Opcao1}"></TextCell>
+
+Mode TwoWay
+
+Para atualizar o que está sendo exibido na tela, quando há interação do usuário com algum objeto
+é possível determinar no objeto no XAML o Mode="TwoWay", assim, não só o XAML é
+notificado do estado dos objetos no c#, mas o c# também será notificado de mudanças no xaml
+
+OnPropertyChanged(nameof(NomeDaPropertyQueDeveSerAtualizada)); = Notifica o xaml que uma property que faz parte do biding foi alterada (assim
+ele irá alterar a view)
+
+-
+
+
+EntryCell = input tableview
+<EntryCell Label="Nome:"></EntryCell>
+
+configurar teclado adequado
+<EntryCell Label="Fone:" Keyboard="Telephone"></EntryCell>
+<EntryCell Label="E-mail:" Keyboard="Email"></EntryCell>
+
+Nestes objetos EntryCell, podemos fazer um binding para poder receber os dados do lado do codebehind
+
+ViewCell é um componente que permite utitlizar dentro do table view
+outros componentes que não seriam permitidos dentro do table view, por
+exemplo o DatePicker, ele diretamente dentro de um nó TableSection não funcionaria
+é necessário que ele fique dentro do nó ViewCell, que estará dentro do nó TableSection
+
+DatePicker (DateTime)= Calendário
+TimePicker (TimeSpan) = Seleção de hora
