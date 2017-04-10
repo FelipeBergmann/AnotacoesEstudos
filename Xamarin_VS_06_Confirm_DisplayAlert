@@ -1,0 +1,24 @@
+DisplayAlert Assync
+Em muitos casos precisamos enviar mensagens de confirmação antes de concluir uma ação. Para isto, podemos implementar um DisplayAlert que irá nos retornar o que o usuário escolheu.
+Ex.: Questionar o usuário antes de mudar de tela, para isto, vamos alterar a função anonima no Subscribe do view:
+
+protected override void OnAppearing()
+{
+	base.OnAppearing();
+	MessagingCenter.Subscribe<Teste>(this, "TesteCommand", async (msg) =>
+	{
+		var confirma = await DisplayAlert("Confirma o Teste?",
+		"Deseja mesmo confirmar o teste?",
+		"Sim", "Não");
+		
+		if(confirma)
+		{
+			Navigation.PushAsync(new Teste1(msg));
+		}
+	
+	
+	});
+
+}
+
+Neste exemplo, utilizamos os keywords Async e await pois o DisplayAlert retorna uma task, se não utilizarmos o await o app não irá esperar a resposta do usuário e seguirá para a linha seguinte, o if. E o await nos obriga a declarar async no método (que neste caso é a função anonima)]
