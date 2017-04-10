@@ -1,0 +1,25 @@
+Validação
+
+É possível realizar uma validação simples de campos apenas passando um parametro chamado CanExecute para o construtor do command (aquele atributo que passamos no button), este cara desabilita o botão.
+Assim sendo, quando instanciamos o command no construtor do viewModel:
+
+btnCmd = new Command(() =>
+{
+	MessagingCenter.Send<Teste>(this.Teste, "Testar");
+}, () => //outra função anonima p/ CanExecute
+{
+	//por default seria true
+	return !string.IsNullOrEmpty(Teste.Nome)
+}
+);
+
+Porém, quando o campo nome for preenchido é necessário habilitar o botão teste, para isto é preciso implementar o OnPropertyChanged no parâmetro nome (lembrar: criamos uma classe abstract para base de viewmodel)
+
+o set desta propriedade:
+set
+{
+	Teste.nome = value;
+	OnPropertyChanged();
+	((Command)btnCmd).ChangeCanExecute(); // como o btnCmd não foi declarado como command, precisamos fazer o cast
+
+}
