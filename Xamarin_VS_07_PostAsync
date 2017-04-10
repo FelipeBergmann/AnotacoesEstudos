@@ -1,0 +1,52 @@
+PostAssync
+
+Do contrário do get, o PostAssync serve para enviar dados para o servidor.
+Voltando à view:
+
+protected override void OnAppearing()
+{
+	base.OnAppearing();
+	MessagingCenter.Subscribe<Teste>(this, "TesteCommand", async (msg) =>
+	{
+		var confirma = await DisplayAlert("Confirma o Teste?",
+		"Deseja mesmo confirmar o teste?",
+		"Sim", "Não");
+		
+		if(confirma)
+		{
+			//aqui iremos chamar o método que irá fazer o post
+			this.objViewModel.SalvaTeste(); // vamos implementar
+		}
+	
+			
+		});		
+
+}
+
+ViewModelTeste
+const string URL_POST_TESTE = "http..."
+public async void SalvaTeste()
+{
+		//var conteudo = new StringContent("", Encoding.UTF8, "Application/json")
+		
+		//para receber utilizamos o deserialize, para enviar serialize
+		var json = JsonConvert.SerializeObject( new
+		{
+			Nome = Nome,
+			Valor = Valor
+		}
+		);
+		
+		//utitlizar o client da microsoft
+		HttpClient cliente = new HttpClient();
+		var respota = await cliente.PostAssync(URL_POST_TESTE,conteudo);
+		
+		if(resposta.IsSuccessStatusCode)
+			MessagingCenter.Send<Teste>(this.Teste, "SucessoTeste");
+			
+		else
+			MessagingCenter.Sent<ArgumentException>(new ArgumentException(), "FalhaTeste");
+
+}
+
+REALIZAR O SUBSCRIBE NA VIEW PARA AS DUAS POSSIBILIDADES DE MENSAGENS, REALIZANDO O TRATAMENTO DESEJADO NA FUNÇÃO ANONIMA
