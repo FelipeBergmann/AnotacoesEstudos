@@ -1,0 +1,127 @@
+ViewModel
+Intermediaria entre view e modelo
+
+VIEW: User Interface (user interface logic = code behind)
+ViewModel: Lógica de Apresentação
+Model: Lógica e dados de negócios
+View <- (Notificações) ViewModel -> Model
+View <- (DataBiding) -> ViewModel <- Model
+View <- (Comandos) -> ViewModel <- Model
+
+Todas as propriedades devem ser migradas para o ViewModel
+
+Como mudar o bindingContext para o viewModel?
+
+1. Remover do construtor da view o this.BindingContext = this; - Voce poderá alterar o this para uma nova instancia do ViewModel ou configurar no XAML o <ContentPage.BidingContext> conforme instruções no final deste bloco. Caso altere o this para a nova instancia do viewModel, não é necessário configurar nada no XAML, ignorar os passos a seguir.
+2. No XAML da view, na primeira tag que é a ContentPage existem algumas configurações
+como xmlns:local="clr-namespace:..." - este é o namespace do codebehind,
+é necessário configurar outro atributo para o namespace do viewModel:
+xmlns:vm="clr-namespace:SeuProjeto.ViewModels" por exemplo.
+Também é necessário configurar o bindingContext no próprio XAML. Após fechar a abertura da 
+tag ContentPage (dentro deste nó):
+<ContentPage.BindingContext>
+	<vm:ListagemViewModel></vm:ListagemViewModel>
+</ContentPage.BindingContext>
+
+OnPropertyChanged
+Anteriormente chamados o método OnPropertyChanged para trabalhar com notificações entre as camadas, não tivemos problemas para chamá-lo na view pois a view já herda este método, porém, um ViewModel, que é uma classe padrão, não herda, temos que implementar manualmente isto.
+Para isto, a ViewModel precisa implementar a classe INotifyPropertyChanged
+public Class DetalheViewModel: INotifyPropertyChanged
+
+Que implementa o evento PropertyChanged:
+
+public event PropertyChangedEventHandler PropertyChanged;
+
+public void OnPropertyChanged([CallerMemberName]string name = "")
+//Esta anotação CallerMemberName passa o próprio chamador do evento caso o argumento seja nulo
+{
+	PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+	//a interrogação após o objeto valida se o objeto PropertyChanged é null antes de realizar o Invoke. Caso seja, não executa.
+	
+}
+
+Beneficios modelo MVVM
+
+O principal benefício é permitir a verdadeira separação entre a View e o Modelo. Isso significa que, se o modelo necessitar de uma mudança, ele pode ser alterado facilmente sem a necessidade de alterar também a View, e vice-versa.
+Os benecífios da aplicação do padrão MVVM são:
+
+Facilidade de manutenção
+Testabilidade
+Extensibilidade
+
+--
+Evento ListView
+Ao selecionar um item, podemos trocar o evento de ItemTapped para SelectedItem
+
+MessagingCenter e Eventos
+
+Para desacoplar os eventos da view e passá-los para a viewmodel é necessário utilizar o conceito de mensageria, que nada mais é o envio de uma mensagem para outra classe, para isto, utilizamos o MessagingCenter.
+Podemos criar uma property na viewModel que representa um item selecionado e no SET desta property criar uma mensagem que será enviada para o messagingcenter (a classe que cria a mensagem e a envia, não sabe quem irá recebe-lá ou até mesmo se alguém irá.)
+Ex:
+
+Teste objTeste;
+public Teste TesteSelecionado
+{
+	get
+	{
+		return objTeste;
+	}
+	
+	set
+	{
+		objTeste = value;
+		
+		if(objTeste != null)
+			MessagingCenter.Send(objTeste, "MensagemTesteSelecionado")
+	
+	}
+	
+	
+}
+
+Já na view, que é o cara que tem a capacidade de trocar de tela, a classe que acessa o método Navigation.PushAssync:
+Para realizar a assinatura de recebimento de mensagem, vamos utilizar o evento OnAppearing que é quando a tela está aparecendo para o usuário.
+
+protected override void OnAppearing()
+{
+	base.OnAppearing();
+	
+	//vamos assinar o recebimento da mensagem
+	MessagingCenter.Subscribe<Teste>(this, "MensagemTesteSelecionado",
+		(msg) => 
+		{
+			Navigat.PushAssync(new TesteView(msg));
+		});
+		
+		//argumentos: 1º quem está assinando, no caso, ele mesmo - this
+		// 2º Qual é a mensagem de quem enviou (funciona como uma chave)
+		// 3º É uma função anônima que será executada quando receber a //mensagem, repare que é uma expressão lambda
+
+}
+
+É muito importante cancelar a assinatura da mensagem
+protected override void OnDisappearing()
+{
+	base.OnDisappearing();
+	
+	MessagingCenter.Unsubscribe<Teste>(this, "MensagemTesteSelecionado");
+}
+
+Button, Command e ICommand
+para buttons é necessário começar a utilizar commands, trocar no xaml a atributo do button de  Clicked para command, assim será possível fazer o binding com o código da viewModel.
+No viewmodel:
+
+public ICommand ComandoBotao{get;set;}
+
+É necessário instanciar o comando no construtor.
+
+public MyViewModel(Teste objTeste)
+{
+	ComandoBotao = new Command(() =>
+	{
+		MessagingCenter.Send(objTeste, "EventoBotao")
+	});
+}
+
+Criar a mesma assinatura de mensagem que criamos anteriormente no view.
+
